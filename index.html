@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>noteネタツール</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background:#f5f5f5; }
+    textarea, input { width: 100%; margin-top:10px; padding:10px; }
+    button { margin-top:10px; padding:10px; cursor:pointer; }
+    .card { background:white; padding:15px; margin-top:15px; border-radius:10px; }
+  </style>
+</head>
+<body>
+
+<h2>noteネタツール</h2>
+
+<div class="card">
+  <h3>トレンド入力</h3>
+  <textarea id="trend" placeholder="#新生活\nChatGPT\n仕事"></textarea>
+  <button onclick="generateIdeas()">ネタ生成</button>
+</div>
+
+<div class="card">
+  <h3>ネタ候補</h3>
+  <div id="ideas"></div>
+</div>
+
+<div class="card">
+  <h3>メモ</h3>
+  <input id="theme" placeholder="テーマ">
+  <textarea id="memo" placeholder="思ったことを書く"></textarea>
+  <button onclick="generatePrompt()">プロンプト生成</button>
+</div>
+
+<div class="card">
+  <h3>出力（ChatGPTに貼る）</h3>
+  <textarea id="output" rows="10"></textarea>
+</div>
+
+<script>
+function generateIdeas(){
+  const trend = document.getElementById("trend").value.split("\\n");
+  const angles = ["疲れた日","違和感","うまくいかなかったこと","気づき"];
+  let html = "";
+
+  trend.forEach(t=>{
+    angles.forEach(a=>{
+      html += `<div><button onclick="useIdea('${t}の中で感じた${a}')">${t}の中で感じた${a}</button></div>`;
+    });
+  });
+
+  document.getElementById("ideas").innerHTML = html;
+}
+
+function useIdea(text){
+  document.getElementById("theme").value = text;
+}
+
+function generatePrompt(){
+  const theme = document.getElementById("theme").value;
+  const memo = document.getElementById("memo").value;
+
+  document.getElementById("output").value =
+`以下をもとにnote記事を書いてください。
+
+テーマ：
+${theme}
+
+メモ：
+${memo}
+
+・ですます調
+・押し付けない
+・自然な独り言`;
+}
+</script>
+
+</body>
+</html>
